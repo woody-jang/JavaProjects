@@ -23,8 +23,7 @@ public class MainFrame extends JFrame {
 	JPanel numsPnl = new JPanel();
 	List<List<JLabel>> lblList = new ArrayList<>();
 
-	public MainFrame() throws IOException {
-		
+	public MainFrame(int startNo) throws IOException {
 		JPanel mainPnl = new JPanel();
 		mainPnl.setLayout(new BoxLayout(mainPnl, BoxLayout.Y_AXIS));
 		
@@ -32,8 +31,8 @@ public class MainFrame extends JFrame {
 		titlePnl.setOpaque(true);
 		titlePnl.setBackground(Color.white);
 		
-		waitingLbl.setText("잠시만 기다려주세요...");
-		waitingLbl.setFont(new Font(waitingLbl.getFont().getName(), Font.PLAIN, 15));
+		waitingLbl.setText("불러오기 버튼을 누르시고 잠시만 기다려주세요 :-)");
+		waitingLbl.setFont(new Font(waitingLbl.getFont().getName(), Font.PLAIN, 18));
 		titlePnl.add(waitingLbl);
 		
 		numsPnl.setOpaque(true);
@@ -50,13 +49,11 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					getLottoNo();
+					getLottoNo(startNo);
 				} catch (IOException e1) {
 				}
 				setNumsLbl();
 				waitingLbl.setText("숫자별 당첨 번호 출현 횟수");
-				repaint();
-				revalidate();
 				pack();
 			}
 
@@ -121,8 +118,8 @@ public class MainFrame extends JFrame {
 	}
 
 	// 역대 당첨번호 저장
-	public void getLottoNo() throws IOException{
-		for (int i = 1; ; i++) {
+	public void getLottoNo(int startNo) throws IOException{
+		for (int i = startNo; ; i++) {
 			// 로또 홈페이지에서 정보 긁어오기
 			String lottoURL = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=" + i;
 			Connection lottoConn = Jsoup.connect(lottoURL);
