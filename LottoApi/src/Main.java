@@ -34,17 +34,17 @@ public class Main extends JFrame {
 		JPanel lblPnl = new JPanel();
 		lblPnl.setOpaque(true);
 		lblPnl.setBackground(Color.white);
-		
+
 		JLabel informLbl = new JLabel("조회를 시작 할 회차를 선택하세요");
 		informLbl.setFont(new Font(informLbl.getFont().getName(), Font.PLAIN, 17));
-		
+
 		lblPnl.add(informLbl);
-		
+
 		JPanel combPnl = new JPanel();
 		combPnl.setOpaque(true);
 		combPnl.setBackground(Color.white);
 
-		JComboBox<Integer> noCombBox =  new JComboBox<>(combList);
+		JComboBox<Integer> noCombBox = new JComboBox<>(combList);
 		noCombBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -64,14 +64,13 @@ public class Main extends JFrame {
 			}
 		});
 
-		
 		combPnl.add(noCombBox);
 		combPnl.add(okBtn);
-		
+
 		totalPnl.add(logoPnl);
 		totalPnl.add(lblPnl);
 		totalPnl.add(combPnl);
-		
+
 		add(totalPnl);
 
 		showGUI();
