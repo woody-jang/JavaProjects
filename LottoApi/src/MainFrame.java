@@ -24,6 +24,7 @@ public class MainFrame extends JFrame {
 	List<List<JLabel>> lblList = new ArrayList<>();
 
 	public MainFrame(int startNo) throws IOException {
+		setLocation(650, 300);
 		JPanel mainPnl = new JPanel();
 		mainPnl.setLayout(new BoxLayout(mainPnl, BoxLayout.Y_AXIS));
 		

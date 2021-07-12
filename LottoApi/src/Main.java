@@ -16,6 +16,7 @@ public class Main extends JFrame {
 	int startNo = 1;
 
 	public Main() throws IOException {
+		setLocation(700, 300);
 		getLastNo();
 		JPanel totalPnl = new JPanel();
 		totalPnl.setLayout(new BoxLayout(totalPnl, BoxLayout.Y_AXIS));
