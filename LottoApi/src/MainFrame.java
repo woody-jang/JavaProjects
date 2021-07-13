@@ -45,6 +45,15 @@ public class MainFrame extends JFrame {
 		btnPnl.setOpaque(true);
 		btnPnl.setBackground(Color.white);
 
+		JButton sortBtn = new JButton("많이 나온 순서대로 보기");
+		sortBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new SortingFrame(lottoNums);
+				dispose();
+			}
+		});
+		
 		JButton loadBtn = new JButton("불러오기");
 		loadBtn.addActionListener(new ActionListener() {
 			@Override
@@ -55,11 +64,11 @@ public class MainFrame extends JFrame {
 				}
 				setNumsLbl();
 				waitingLbl.setText("숫자별 당첨 번호 출현 횟수");
+				btnPnl.add(sortBtn);
 				pack();
 			}
-
 		});
-
+		
 		btnPnl.add(loadBtn);
 
 		mainPnl.add(titlePnl);
