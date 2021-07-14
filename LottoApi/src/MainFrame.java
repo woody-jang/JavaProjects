@@ -15,19 +15,21 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class MainFrame extends JFrame {
-	int[] lottoNums = new int[45];
+	int[] lottoNums = new int[45]; // 각 숫자들이 나온 횟수를 저장할 배열
 	int[] bonusNums = new int[45];
-	List<List<Integer>> lottoNumList = new ArrayList<>();
+	List<List<Integer>> lottoNumList = new ArrayList<>(); // 회차별로 6개 숫자를 저장할 리스트
 	List<Integer> bonusNumList = new ArrayList<>();
 	JLabel waitingLbl = new JLabel();
 	JPanel numsPnl = new JPanel();
-	List<List<JLabel>> lblList = new ArrayList<>();
+	List<List<JLabel>> lblList = new ArrayList<>(); // 등장 횟수를 표시할 레이블
 
 	public MainFrame(int startNo) throws IOException {
 		setLocation(650, 300);
+		// 메인 패널
 		JPanel mainPnl = new JPanel();
 		mainPnl.setLayout(new BoxLayout(mainPnl, BoxLayout.Y_AXIS));
 
+		// 안내 문구를 위한 패널
 		JPanel titlePnl = new JPanel();
 		titlePnl.setOpaque(true);
 		titlePnl.setBackground(Color.white);
@@ -39,8 +41,10 @@ public class MainFrame extends JFrame {
 		numsPnl.setOpaque(true);
 		numsPnl.setBackground(Color.white);
 
+		// 숫자별 등장횟수를 표시할 패널 받아오기
 		numsPnl = getNumsPnl();
 
+		// 버튼용 패널
 		JPanel btnPnl = new JPanel();
 		btnPnl.setOpaque(true);
 		btnPnl.setBackground(Color.white);
@@ -49,26 +53,30 @@ public class MainFrame extends JFrame {
 		sortBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// 숫자별 등장횟수 배열을 넘겨주면서 새로은 프레임 생성
 				new SortingFrame(lottoNums);
+				// 현재 창 끄기
 				dispose();
 			}
 		});
-		
+
 		JButton loadBtn = new JButton("불러오기");
 		loadBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// 선택한 회차부터 최근 회차까지의 당첨번호 받아오기
 					getLottoNo(startNo);
 				} catch (IOException e1) {
 				}
+				// 등장 횟수용 레이블 수정하기
 				setNumsLbl();
 				waitingLbl.setText("숫자별 당첨 번호 출현 횟수");
 				btnPnl.add(sortBtn);
 				pack();
 			}
 		});
-		
+
 		btnPnl.add(loadBtn);
 
 		mainPnl.add(titlePnl);
@@ -80,6 +88,7 @@ public class MainFrame extends JFrame {
 		showGUI();
 	}
 
+	// 등장횟수 레이블에 표시된 내용을 실제 등장횟수로 수정하기
 	private void setNumsLbl() {
 		for (int i = 0; i < lblList.size(); i++) {
 			for (int j = 0; j < lblList.get(i).size(); j++) {
@@ -89,7 +98,7 @@ public class MainFrame extends JFrame {
 		}
 	}
 
-	// 숫자 레이블 추가
+	// 등장횟수 레이블 추가 - 처음엔 0으로 표시
 	private JPanel getNumsPnl() {
 		JPanel totalTemp = new JPanel();
 		totalTemp.setOpaque(true);

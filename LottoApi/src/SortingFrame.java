@@ -9,17 +9,21 @@ import javax.swing.*;
 
 public class SortingFrame extends JFrame {
 	int[] lottoCntList;
-	int[] lottoNoList = new int[45];
-	
+	int[] lottoNoList = new int[45]; // 등장횟수별로 정렬할때 세트로 다닐 숫자 배열
+
 	public SortingFrame(int[] lottoNums) {
 		setLocation(650, 300);
+		// 원본은 그대로 두고 깊은 복사
 		lottoCntList = lottoNums.clone();
 		for (int i = 1; i < 46; i++) {
 			lottoNoList[i - 1] = i;
 		}
+		// 직접 지정한 방법으로 내림차순 정렬
 		sortArrays();
-		
+
+		// 메인 패널 생성
 		JPanel mainPnl = getNumsPnl();
+		// 버튼용 패널 생성
 		JPanel btnPnl = new JPanel();
 		btnPnl.setOpaque(true);
 		btnPnl.setBackground(Color.white);
@@ -28,22 +32,35 @@ public class SortingFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// 회차 선택화면 다시 호출
 					new Main();
 				} catch (IOException e1) {
 				}
+				// 현재 창 종료
 				dispose();
 			}
 		});
-		
+
+		JButton showNumbers = new JButton("번호 추천 받기");
+		showNumbers.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 등장횟수로 정렬된 숫자배열을 넘기면서 새로운 다이얼로그 생성
+				new ShowNumbers(lottoNoList);
+			}
+		});
 		btnPnl.add(returnBtn);
-		
+		btnPnl.add(showNumbers);
+
 		add(mainPnl, "North");
 		add(btnPnl, "South");
-		
+
 		showGUI();
-		
+
 	}
 
+	// 등장횟수로 정렬하면 각 등장횟수에 해당하는 숫자를 모르기 때문에
+	// 미리 생성한 숫자 배열도 같이 정렬
 	private void sortArrays() {
 		for (int i = 0; i < lottoCntList.length - 1; i++) {
 			for (int j = i + 1; j < lottoCntList.length; j++) {
@@ -51,7 +68,7 @@ public class SortingFrame extends JFrame {
 					int temp = lottoCntList[i];
 					lottoCntList[i] = lottoCntList[j];
 					lottoCntList[j] = temp;
-					
+
 					temp = lottoNoList[i];
 					lottoNoList[i] = lottoNoList[j];
 					lottoNoList[j] = temp;
@@ -59,7 +76,7 @@ public class SortingFrame extends JFrame {
 			}
 		}
 	}
-	
+
 	// 숫자 레이블 추가
 	private JPanel getNumsPnl() {
 		JPanel totalTemp = new JPanel();
@@ -76,6 +93,7 @@ public class SortingFrame extends JFrame {
 			for (int j = 0; j < 7; j++) {
 				if (i == 6 && j > 2)
 					break;
+				// 0 ~ 44
 				int temp = (i * 7) + j;
 				int tempCnt = lottoCntList[temp];
 				int tempNo = lottoNoList[temp];
