@@ -11,6 +11,7 @@ public class ShowNumbers extends JDialog {
 	int[] lottoNoList;
 
 	public ShowNumbers(int[] lottoNoList) {
+		setModal(true);
 		this.lottoNoList = lottoNoList;
 		// 메인 패널 생성
 		JPanel mainPnl = new JPanel();
@@ -44,7 +45,7 @@ public class ShowNumbers extends JDialog {
 
 		add(mainPnl);
 
-		setLocation(650, 300);
+		setLocation(700, 350);
 		pack();
 		setVisible(true);
 	}

@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document;
 
 public class Main extends JFrame {
 	// 콤보박스에 담을 배열
-	private Integer[] combList;
+	static Integer[] combList;
 	// 콤보박스 선택을 담을 변수
 	int startNo = 1;
 

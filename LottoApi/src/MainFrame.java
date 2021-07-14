@@ -20,11 +20,11 @@ public class MainFrame extends JFrame {
 	List<List<Integer>> lottoNumList = new ArrayList<>(); // 회차별로 6개 숫자를 저장할 리스트
 	List<Integer> bonusNumList = new ArrayList<>();
 	JLabel waitingLbl = new JLabel();
-	JPanel numsPnl = new JPanel();
-	List<List<JLabel>> lblList = new ArrayList<>(); // 등장 횟수를 표시할 레이블
+	List<List<JLabel>> numLblList = new ArrayList<>(); // 등장 횟수를 표시할 레이블
+	List<List<JLabel>> bnusNumLblList = new ArrayList<>(); // 보너스 번호 등장 횟수를 표시할 레이블
 
 	public MainFrame(int startNo) throws IOException {
-		setLocation(650, 300);
+		setLocation(650, 150);
 		// 메인 패널
 		JPanel mainPnl = new JPanel();
 		mainPnl.setLayout(new BoxLayout(mainPnl, BoxLayout.Y_AXIS));
@@ -35,19 +35,39 @@ public class MainFrame extends JFrame {
 		titlePnl.setBackground(Color.white);
 
 		waitingLbl.setText("불러오기 버튼을 누르시고 잠시만 기다려주세요 :-)");
-		waitingLbl.setFont(new Font(waitingLbl.getFont().getName(), Font.PLAIN, 18));
+		waitingLbl.setFont(new Font(waitingLbl.getFont().getName(), Font.PLAIN, 22));
 		titlePnl.add(waitingLbl);
 
-		numsPnl.setOpaque(true);
-		numsPnl.setBackground(Color.white);
-
 		// 숫자별 등장횟수를 표시할 패널 받아오기
-		numsPnl = getNumsPnl();
+		JPanel numsPnl = getNumsPnl(numLblList, "**숫자별 등장횟수**");
+
+		// 보너스 번호 등장횟수 표시할 패널 받아오기
+		JPanel bnusNumsPnl = getNumsPnl(bnusNumLblList, "**보너스 번호 등장횟수**");
 
 		// 버튼용 패널
 		JPanel btnPnl = new JPanel();
 		btnPnl.setOpaque(true);
 		btnPnl.setBackground(Color.white);
+
+		JButton returnBtn = new JButton("처음으로");
+		returnBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Main();
+				} catch (IOException e1) {
+				}
+				dispose();
+			}
+		});
+		
+		JButton recentNumBtn = new JButton("최근 당첨번호 보기");
+		recentNumBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new RecentNumDialog(lottoNumList, bonusNumList);
+			}
+		});
 
 		JButton sortBtn = new JButton("많이 나온 순서대로 보기");
 		sortBtn.addActionListener(new ActionListener() {
@@ -72,7 +92,10 @@ public class MainFrame extends JFrame {
 				// 등장 횟수용 레이블 수정하기
 				setNumsLbl();
 				waitingLbl.setText("숫자별 당첨 번호 출현 횟수");
+				btnPnl.remove(loadBtn);
+				btnPnl.add(returnBtn);
 				btnPnl.add(sortBtn);
+				btnPnl.add(recentNumBtn);
 				pack();
 			}
 		});
@@ -81,6 +104,7 @@ public class MainFrame extends JFrame {
 
 		mainPnl.add(titlePnl);
 		mainPnl.add(numsPnl);
+		mainPnl.add(bnusNumsPnl);
 		mainPnl.add(btnPnl);
 
 		add(mainPnl);
@@ -90,28 +114,43 @@ public class MainFrame extends JFrame {
 
 	// 등장횟수 레이블에 표시된 내용을 실제 등장횟수로 수정하기
 	private void setNumsLbl() {
-		for (int i = 0; i < lblList.size(); i++) {
-			for (int j = 0; j < lblList.get(i).size(); j++) {
+		for (int i = 0; i < numLblList.size(); i++) {
+			for (int j = 0; j < numLblList.get(i).size(); j++) {
 				int temp = (i * 7) + j;
-				lblList.get(i).get(j).setText(lottoNums[temp] + "");
+				numLblList.get(i).get(j).setText(lottoNums[temp] + "");
+				bnusNumLblList.get(i).get(j).setText(bonusNums[temp] + "");
 			}
 		}
 	}
 
 	// 등장횟수 레이블 추가 - 처음엔 0으로 표시
-	private JPanel getNumsPnl() {
+	// 보너스 숫자 레이블과 같이 사용
+	private JPanel getNumsPnl(List<List<JLabel>> lblList, String titleString) {
 		JPanel totalTemp = new JPanel();
 		totalTemp.setOpaque(true);
 		totalTemp.setBackground(Color.white);
 		totalTemp.setLayout(new BoxLayout(totalTemp, BoxLayout.Y_AXIS));
+
+		if (titleString.contains("보너스"))
+			totalTemp.add(new JLabel(" "));
+
+		JPanel titlePnl = new JPanel();
+		titlePnl.setOpaque(true);
+		titlePnl.setBackground(Color.white);
+
+		JLabel titleLbl = new JLabel(titleString);
+		titleLbl.setFont(new Font(titleLbl.getFont().getName(), Font.PLAIN, 20));
+		titleLbl.setForeground(Color.red);
+		titlePnl.add(titleLbl);
+
+		totalTemp.add(titlePnl);
 
 		for (int i = 0; i < 7; i++) {
 			JPanel rawTemp = new JPanel();
 			rawTemp.setOpaque(true);
 			rawTemp.setBackground(Color.white);
 			List<JLabel> tempLblList = new ArrayList<>();
-			if (i == 6)
-				rawTemp.setLayout(new FlowLayout(FlowLayout.LEFT));
+			rawTemp.setLayout(new FlowLayout(FlowLayout.LEFT));
 			for (int j = 0; j < 7; j++) {
 				int temp = (i * 7) + j + 1;
 				if (i == 6 && j > 2)
@@ -122,7 +161,11 @@ public class MainFrame extends JFrame {
 				JLabel numCntLbl = new JLabel(0 + "");
 				numCntLbl.setFont(new Font(numCntLbl.getFont().getName(), Font.PLAIN, 17));
 
-				JLabel blankLbl = new JLabel(",       ");
+				JLabel blankLbl = null;
+				if (temp > 9)
+					blankLbl = new JLabel(",       ");
+				else
+					blankLbl = new JLabel(",          ");
 
 				rawTemp.add(numLbl);
 				rawTemp.add(numCntLbl);
